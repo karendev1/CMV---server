@@ -1,7 +1,9 @@
-import User from '../models/User';
 import bcrypt from 'bcrypt';
 import { validateFields } from '../shared/common-methods';
 import { validationRegisterUser } from '../shared/const/register-user'; // Assuming validationRegisterUser is exported
+import User from '../models/User';
+import { validationChangePassword } from '../shared/const/change-password-validation';
+import mongoose from 'mongoose';
 
 export async function searchUserById(req: any, res: any) {
   const id = req.params.id;
@@ -88,7 +90,46 @@ export async function deleteUserById(req: any, res: any) {
 }
 
 export async function changePassword(req: any, res: any) {
-  res.status(501).json({ message: 'Change password not implemented yet' });
+  const { oldPassword, newPassword } = req.body;
+  const { id } = req.params;
+
+  const fieldValidation = validateFields(validationChangePassword, req.body);
+  const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  if (!fieldValidation.valid) {
+    return res.status(422).json({ msg: fieldValidation.message });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ msg: "ID inválido" });
+  }
+
+  try {
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ msg: "Usuário não encontrado" });
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password!);
+    if (!isMatch)
+      return res.status(400).json({ msg: "Senha antiga está incorreta" });
+
+    if (!regexSenha.test(newPassword)) {
+      return res.status(422).json({
+        msg:
+          'A senha deve conter no mínimo 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial',
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.json({ msg: "Senha alterada com sucesso!" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ msg: "Erro ao alterar a senha. Tente novamente mais tarde." });
+  }
 }
 
 export default {

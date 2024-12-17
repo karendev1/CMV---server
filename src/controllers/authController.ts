@@ -1,8 +1,8 @@
-import User from "../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserDocument } from "../shared/interfaces/user-document";
 import { UserLogin } from "../shared/interfaces/user-login";
+import  User from "../models/User";
 
 export async function login(req: any, res: any) {
   const { email, password }: UserLogin = req.body;

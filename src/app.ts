@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 
 import { login } from './controllers/authController';
 import { checkToken } from './shared/common-methods';
-import { deleteUserById, registerUser, searchAllUsers, searchUserById } from './controllers/userController';
+import { changePassword, deleteUserById, registerUser, searchAllUsers, searchUserById } from './controllers/userController';
 
 const app = express();
 
@@ -30,6 +30,10 @@ app.get("/users", checkToken, async (req: Request, res: Response) => {
 
 app.delete("/user/:id", checkToken, async (req: Request, res: Response) => {
   await deleteUserById(req, res);
+});
+
+app.put("/change-password/:id", checkToken, async (req: Request, res: Response) => {
+  await changePassword(req, res);
 });
 
 const dbUser: string = process.env.DB_USER!;
