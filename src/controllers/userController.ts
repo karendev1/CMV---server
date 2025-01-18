@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { validateFields } from '../shared/common-methods';
-import { validationRegisterUser } from '../shared/const/register-user'; // Assuming validationRegisterUser is exported
+import { validationRegisterUser } from '../shared/const/register-user';
 import User from '../models/User';
 import { validationChangePassword } from '../shared/const/change-password-validation';
 import mongoose from 'mongoose';
@@ -66,7 +66,7 @@ export async function registerUser(req: any, res: any) {
 
 export async function searchAllUsers(req: any, res: any) {
   try {
-    const users = await User.find();
+    const users = await User.find({});
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao obter usuários.' });
