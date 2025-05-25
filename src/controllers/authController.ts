@@ -18,13 +18,13 @@ export async function login(req: any, res: any) {
   const user: UserDocument | null = await User.findOne({ email });
 
   if (!user) {
-    return res.status(404).json({ msg: "Usuário não encontrado!" });
+    return res.status(404).json({ msg: "E-mail ou senha incorretos. Tente novamente." });
   }
 
   const checkPassword = await bcrypt.compare(password, user.password);
 
   if (!checkPassword) {
-    return res.status(422).json({ msg: "Senha inválida" });
+    return res.status(422).json({ msg: "E-mail ou senha incorretos. Tente novamente." });
   }
 
   try {

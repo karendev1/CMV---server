@@ -11,6 +11,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routers/usersRouters');
 const assistedRouter = require('./routers/assistedRouters')
+const activityRouter = require('./routers/activityRouters')
+const eventRouter = require('./routers/eventRouters')
+
 
 
 app.use(cors());
@@ -24,6 +27,8 @@ app.post("/api/auth/login", async (req: Request, res: Response) => {
 app.use(bodyParser.json());
 app.use('/api/users', userRoutes);
 app.use('/api/assisted', assistedRouter);
+app.use('/api/activity', activityRouter);
+app.use('/api/event', eventRouter)
 
 
 const dbUser: string = process.env.DB_USER!;
