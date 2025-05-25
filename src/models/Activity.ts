@@ -8,6 +8,7 @@ const ActivitySchema = new mongoose.Schema({
     project: String,
     goal: String,
     status: String,
+    responsible: String
 });
 
 module.exports = mongoose.model('Activity', ActivitySchema);
