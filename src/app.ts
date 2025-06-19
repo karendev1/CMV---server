@@ -28,7 +28,10 @@ app.use(bodyParser.json());
 app.use('/api/users', userRoutes);
 app.use('/api/assisted', assistedRouter);
 app.use('/api/activity', activityRouter);
-app.use('/api/event', eventRouter)
+app.use('/api/event', eventRouter);
+app.get('/health', (req, res) => {
+  res.status(200).send('ok');
+});
 
 
 const dbUser: string = process.env.DB_USER!;
